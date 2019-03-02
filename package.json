@@ -1,0 +1,22 @@
+{
+  "name": "gulp-replacer",
+  "version": "1.0.0-alpha.1",
+  "description": "Gulp plugin that replaces properties on text files, much like apache ant's filtering tool.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcius Fonseca",
+  "license": "LGPL-2.1",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-exclude": "^1.0.12",
+    "dateformat": "^3.0.3",
+    "fs-extra": "^7.0.1",
+    "gulp-mocha": "^6.0.0",
+    "readable-stream": "^3.1.1",
+    "source-map": "^0.7.3",
+    "vinyl": "^2.2.0",
+    "vinyl-sourcemaps-apply": "^0.2.1"
+  }
+}
