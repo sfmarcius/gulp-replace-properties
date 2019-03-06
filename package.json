@@ -1,5 +1,5 @@
 {
-  "name": "gulp-replacer",
+  "name": "@mfonseca/gulp-replacer",
   "version": "1.0.0-alpha.1",
   "description": "Gulp plugin that replaces properties on text files, much like apache ant's filtering tool.",
   "main": "src/index.js",
@@ -18,5 +18,23 @@
     "source-map": "^0.7.3",
     "vinyl": "^2.2.0",
     "vinyl-sourcemaps-apply": "^0.2.1"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://sfmarcius@github.com/sfmarcius/gulp-replacer.git"
+  },
+  "keywords": [
+    "properties",
+    "replace",
+    "replacer",
+    "filtering"
+  ],
+  "bugs": {
+    "url": "https://github.com/sfmarcius/gulp-replacer/issues"
+  },
+  "homepage": "https://github.com/sfmarcius/gulp-replacer#readme"
 }
