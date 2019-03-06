@@ -1,6 +1,6 @@
 {
   "name": "@mfonseca/gulp-replacer",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Gulp plugin that replaces properties on text files, much like apache ant's filtering tool.",
   "main": "src/index.js",
   "scripts": {

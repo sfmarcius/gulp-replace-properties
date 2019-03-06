@@ -302,13 +302,14 @@ function replaceProps(properties = {}, options = {}) {
             }
             return callback(err, inputFile);
         },
-        flush: function () {
+        flush: function (callback) {
             if (nSuccess > 0) {
                 logSuccess(`${nSuccess} file(s) proccessed.`, options);
             }
             if (nProblems > 0) {
                 logWarn(`${nProblems} files failed.`, options);
             }
+            return callback();
         }
     });
 }
@@ -368,13 +369,14 @@ function replace(target, replacement, options = {}) {
             }
             return callback(err, inputFile);
         },
-        flush: function () {
+        flush: function (callback) {
             if (nSuccess > 0) {
                 logSuccess(`${nSuccess} file(s) proccessed.`, options);
             }
             if (nProblems > 0) {
                 logWarn(`${nProblems} files failed.`, options);
             }
+            return callback();
         }
     });
 }
