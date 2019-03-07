@@ -13,7 +13,6 @@ const SourceNode = require("source-map").SourceNode;
 
 const LINE_MATCHER = /\n/gm;
 const PROP_REGEX = /[a-zA-Z0-9_\\.\\-]+/;
-const UNDEFINED = void (0);
 const LOG_NONE = 0;
 const LOG_SEVERE = 1;
 const LOG_WARNING = 2;
@@ -167,6 +166,7 @@ function initOptions(options = {}) {
         enabled: true,
         startDelimiter: "#[[",
         endDelimiter: "]]",
+        caseSensitive: true,
         dateFormat: "dd/mm/yyyy",
         timeFormat: "hh:MM:ss",
         datetimeFormat: "dd/mm/yyyy hh:MM:ss",
@@ -194,8 +194,19 @@ function getPropRegex(options) {
     return new RegExp(`(${start})(${PROP_REGEX.source})(${end})`, options.caseSensitive ? "g" : "gi");
 }
 function getStrRegex(str, options) {
-    let pattern = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return new RegExp(`(${pattern})`, options.caseSensitive ? "g" : "gi");
+    let source = "";
+    let flags = "";
+    if (str.source) {
+        source = str.source;
+        flags = str.flags;
+    } else {
+        source = str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        flags = "g";
+    }
+    if (!options.caseSensitive && flags.indexOf("i") < 0) {
+        flags += "i";
+    }
+    return new RegExp(source, flags);
 }
 class Position {
     constructor(file, line, column) {
@@ -334,7 +345,7 @@ function replace(target, replacement, options = {}) {
                     let filePos = new Position(inputFile.path);
                     let match = null;
                     do {
-                        let re = target.source ? target : getStrRegex(target, options);
+                        let re = getStrRegex(target, options);
                         match = re.exec(remain);
                         if (match) {
                             buffer += remain.substring(0, match.index);

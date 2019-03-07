@@ -4,71 +4,45 @@ chai.use(chaiExclude);
 const expect = chai.expect;
 const fs = require('fs-extra');
 const File = require('vinyl');
-
 const replacer = require("../src/index");
 
-describe('gulp-replacer', () => {
-    const options = {
-//        logLevel: 10
+function doTest(targetFunction, targetArgs, testFilename, doneCallback) {
+    let inputFile = new File({ path: `test/fixtures/${testFilename}`, contents: fs.readFileSync(`test/fixtures/${testFilename}`) });
+    let expectedContent = fs.readFileSync(`test/expected/${testFilename}`, 'utf8');
+    let check = function (stream, done, cb) {
+        stream.on('data', function (newFile) {
+            cb(newFile);
+            done();
+        });
+        stream.write(inputFile);
+        stream.end();
     };
-
-    it("replace fixtures/testprops.txt", (done) => {
-        let props = {
-            user1: "Java",
-            user2: "PHP",
-            user3: "Javascript",
-            user4: "TypeScript",
-        }
-        let file = new File({ path: 'test/fixtures/testprops.txt', contents: fs.readFileSync('test/fixtures/testprops.txt') });
-        let check = function (stream, done, cb) {
-            stream.on('data', function (newFile) {
-                cb(newFile);
-                done();
-            });
-            stream.write(file);
-            stream.end();
-        };
-        var stream = replacer.replaceProps(props, options);
-        check(stream, done, function (newFile) {
-            let actual = String(newFile.contents);
-            let target = fs.readFileSync('test/expected/testprops.txt', 'utf8');
-            expect(actual).to.equal(target);
-        });
+    var stream = targetFunction.apply(null, targetArgs);
+    check(stream, doneCallback, function (outputFile) {
+        let actualContent = String(outputFile.contents);
+        expect(actualContent).to.equal(expectedContent);
     });
+}
 
-    it("replace fixtures/testregex.txt", (done) => {
-        let file = new File({ path: 'test/fixtures/testregex.txt', contents: fs.readFileSync('test/fixtures/testregex.txt') });
-        let check = function (stream, done, cb) {
-            stream.on('data', function (newFile) {
-                cb(newFile);
-                done();
-            });
-            stream.write(file);
-            stream.end();
-        };
-        var stream = replacer.replace(/\d+/, "ABC", options);
-        check(stream, done, function (newFile) {
-            let actual = String(newFile.contents);
-            let target = fs.readFileSync('test/expected/testregex.txt', 'utf8');
-            expect(actual).to.equal(target);
-        });
-    });
+describe('gulp-replacer', () => {
+    let props = {
+        user1: "Java",
+        user2: "PHP",
+        user3: "Javascript",
+        user4: "TypeScript",
+    };
+    let tests = [
+        ["test_01.txt", replacer.replaceProps, [props]],
+        ["test_02.txt", replacer.replace, [/\d+/, "ABC"]],
+        ["test_03.txt", replacer.replace, [/ABC/, "123"]],
+        ["test_03.txt", replacer.replace, [/abc/, "123", {caseSensitive: false}]],
+        ["test_04.txt", replacer.replace, ["{greet}", "Hello"]],
+        ["test_04.txt", replacer.replace, ["{GREET}", "Hello", {caseSensitive: false}]]
+    ];
 
-    it("replace fixtures/teststr.txt", (done) => {
-        let file = new File({ path: 'test/fixtures/teststr.txt', contents: fs.readFileSync('test/fixtures/teststr.txt') });
-        let check = function (stream, done, cb) {
-            stream.on('data', function (newFile) {
-                cb(newFile);
-                done();
-            });
-            stream.write(file);
-            stream.end();
-        };
-        var stream = replacer.replace("{greet}", "Hello", options);
-        check(stream, done, function (newFile) {
-            let actual = String(newFile.contents);
-            let target = fs.readFileSync('test/expected/teststr.txt', 'utf8');
-            expect(actual).to.equal(target);
+    tests.forEach(testparams => {
+        it(`replace fixtures/${testparams[0]}`, (doneCallback) => {
+            doTest(testparams[1], testparams[2], testparams[0], doneCallback);
         });
     });
 });

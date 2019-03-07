@@ -90,6 +90,10 @@ You can even create properties that references other properties!
 
 If a given prop usage in your source doesn't have a respective key/value in your properties, the usage will be unnafected.
 
+### caseSensitive (`Boolean`. Defaults to `true`)
+
+Controls whether the property lookup must be case sensitive or insensitive.
+
 ### dateFormat (`String`. Defaults to `"dd/mm/yyyy"`)
 
 Pattern used to format the provided property `current.date`.
@@ -114,15 +118,41 @@ Pattern used to format the provided property `current.timestamp`.
 
 See the [dateformat module](https://www.npmjs.com/package/dateformat) for instructions about the valid patterns.
 
-### logLevel (`Integer`. Defaults to `2`)
+### logLevel (`Integer`. Defaults to `3`)
 
 Controls how much logging verbose you want to see on the console.
 
 The possible values are:
 ```javascript
-10  // LOG_ALL
- 8  // LOG_DEBUG;
- 3  // LOG_INFO;
- 2  // LOG_WARNING
- 1  // LOG_SEVERE
- 0  // LOG_NONE
+10  // log all
+ 8  // log debug and bellow
+ 6  // log fine and bellow
+ 4  // log success and bellow
+ 3  // log info and bellow
+ 2  // log warning and bellow
+ 1  // log severe and bellow
+ 0  // log nothing
+```
+
+### resolveProperties (`Boolean`. Defaults to `true`)
+
+Controls whether the given cross-referenced properties must be processed prior the replacement.
+
+If ´false´, the replacement will be done with the properties values as is. 
+
+### failOnMissingProperties (`Boolean`. Defaults to `false`)
+
+Controls whether the replacement proccess must fail or just ignore non-existing referenced properties.
+
+If ´false´, nothing will be done with unknown properties (it will remain as is). If ´true´, an error will be thrown.
+
+
+### failOnCiclicProperties (`Boolean`. Defaults to `false`)
+
+Before the replacement takes place, the cross-referenced properties will be resolved (if `resolveProperties=true`).
+
+This option instructs what to do if this resolution results in a ciclic recursion.
+
+If ´false´, as soon as the plugin detects a recursive property, it will just abort and skip its resolution (leave it as it originally is).
+
+If ´true´, as soon as the plugin detects a recursive property it throws an error.

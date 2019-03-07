@@ -1,5 +1,0 @@
-Hello Java Java!
-Hello PHP!
-Hello Javascript PHP!
-Hello TypeScript!
-Hello #[[user5]]!

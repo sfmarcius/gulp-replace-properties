@@ -1,3 +1,0 @@
-{greet} javascript!
-{greet} java!
-{greet} node!
